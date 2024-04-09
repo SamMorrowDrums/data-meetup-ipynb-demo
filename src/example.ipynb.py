@@ -54,3 +54,41 @@ else:
     # Print the error message
     print(f'Request failed with status code {response.status_code}: {response.text}')
 
+
+# In[ ]:
+
+
+import psycopg2
+
+# Connect to the PostgreSQL database
+conn = psycopg2.connect(
+    host="your_host",
+    database="your_database",
+    user="your_user",
+    password="your_password"
+)
+
+# Create a cursor object to interact with the database
+cur = conn.cursor()
+
+# Retrieve data from the original table
+cur.execute("SELECT name, age, date_of_birth FROM original_table")
+data = cur.fetchall()
+
+# Process the data (example: add 1 to the age)
+processed_data = [(name, age + 1, date_of_birth) for name, age, date_of_birth in data]
+
+# Create a new table with a different name
+cur.execute("CREATE TABLE new_table (name VARCHAR, age INTEGER, date_of_birth DATE)")
+
+# Insert the processed data into the new table
+for name, age, date_of_birth in processed_data:
+    cur.execute(f"INSERT INTO new_table (name, age, date_of_birth) VALUES ({name}, {age}, {date_of_birth})")
+
+# Commit the changes to the database
+conn.commit()
+
+# Close the cursor and the connection
+cur.close()
+conn.close()
+
