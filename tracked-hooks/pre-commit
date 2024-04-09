@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+echo "extracting python files from notebooks..."
+script/extract-python.sh
